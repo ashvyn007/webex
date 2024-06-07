@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps Example</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZjiliLrrsOOQJ5y31UJkFAJJB2dYgkV0"></script>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #map {
+            height: 80%;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Current Location</h1>
+    <div id="map"></div>
+    <script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 12.9141, lng: 74.8560 },
+                zoom: 10
+            });
+
+            function addMarker(lat, lng, title) {
+                new google.maps.Marker({
+                    position: { lat, lng },
+                    map: map,
+                    title: title || ""
+                });
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    addMarker(pos.lat, pos.lng, "You are here!");
+                }, function () {
+                    handleLocationError(true, map.getCenter());
+                });
+            } else {
+                handleLocationError(false, map.getCenter());
+            }
+
+            addMarker(12.9012, 75.0412, "Bantwala");
+            addMarker(12.7687, 75.2071, "Puttur");
+
+            function handleLocationError(browserHasGeolocation, pos) {
+                var infoWindow = new google.maps.InfoWindow({
+                    content: browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.'
+                });
+
+                var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: 'Error!'
+                });
+
+                marker.addListener('click', function () {
+                    infoWindow.open(map, marker);
+                });
+            }
+
+            let currentLat = 12.9141;
+            let currentLng = 74.8560;
+            let currentMarker = new google.maps.Marker({
+                position: { lat: currentLat, lng: currentLng },
+                map: map,
+                title: "Current Location"
+            });
+
+            function moveMarker() {
+                currentLat += - 0.0001; // Adjust speed
+                currentLng += 0.0001; // Adjust direction
+                const newPosition = { lat: currentLat, lng: currentLng };
+
+                currentMarker.setPosition(newPosition);
+
+                setTimeout(moveMarker, 10); // Move every 100 milliseconds
+            }
+
+            moveMarker();
+        }
+
+        initMap();
+    </script>
+</body>
+</html>
