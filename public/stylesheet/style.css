@@ -1,0 +1,96 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body canvas {
+    width: 100vw;
+    height: 100vh;
+    background-color:#ffffff;
+    position: absolute;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+button a{
+    text-decoration: none;
+    color: #000000;
+    font-weight: 600;
+}
+
+button a:hover {
+    color: #ffffff;
+}
+
+.btn-group {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-custom {
+    background-color: #fcff3a;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    color: #000000;
+    border-radius: 12px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-custom:hover {
+    background-color: #fc1e1e;
+    transform: translateY(-2px);
+}
+
+.btn-custom:active {
+    background-color: #004494;
+}
+
+footer {
+    background-color: #00000080;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    z-index: 999;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer .social-icons a {
+    color: #fff;
+    margin: 0 10px;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+footer .social-icons a:hover {
+    color: #007bff;
+}
+
+footer .footer-links a {
+    color: #fff;
+    margin: 0 10px;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+footer .footer-links a:hover {
+    color: #007bff;
+}

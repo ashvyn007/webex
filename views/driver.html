@@ -1,14 +1,121 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Driver page</title>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZjiliLrrsOOQJ5y31UJkFAJJB2dYgkV0"></script> -->
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>
-        Driver page
-    </h1>
+    <h1>im driver page</h1>
+    <div id="map"></div>
+
+
+    <script>
+
+ fetch('/api/key')
+            .then(response => response.json())
+            .then(data => {
+                const apiKey = data.apiKey;
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+            })
+            .catch(error => {
+                console.error('Error fetching API key:', error);
+            });
+document.addEventListener("DOMContentLoaded", () => {
+    fetch('http://localhost:3000/students')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length > 0) {
+                // Assuming the first entry in data has the latitude and longitude
+                // const { latitude, longitude } = data[0];
+                // initMap(latitude, longitude);
+                data.forEach(student => {
+                    console.log(student)
+                    console.log(student.usn+ " "+ student.student_name);
+                });
+            } else {
+                console.error('No location data available');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+});
+
+        
+
+function initMap() {
+    // Create a new map centered at the current location
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 0, lng: 0 },
+        zoom: 15
+    });
+
+    // Try HTML5 geolocation to get the current position
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Add a marker at the current location
+            new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: 'You are here!'
+            });
+
+            // Center the map on the current location
+            map.setCenter(pos);
+        }, function () {
+            handleLocationError(true, map.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, map.getCenter());
+    }
+}
+
+function handleLocationError(browserHasGeolocation, pos) {
+    var infoWindow = new google.maps.InfoWindow({
+        content: browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.'
+    });
+
+    var marker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        title: 'Error!'
+    });
+
+    marker.addListener('click', function () {
+        infoWindow.open(map, marker);
+    });
+}
+
+
+        // JavaScript code to initialize Google Map
+    </script>
+    <script>
+        initMap();
+    </script>
     
 </body>
 </html>

@@ -12,7 +12,6 @@
 <html>
 <head>
     <title>Google Maps Example</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZjiliLrrsOOQJ5y31UJkFAJJB2dYgkV0"></script>
     <style>
         #map {
             height: 400px;
@@ -23,6 +22,21 @@
 <body>
     <h1>My Current Location</h1>
     <div id="map"></div>
+
+    <script>fetch('/api/key')
+        .then(response => response.json())
+        .then(data => {
+            const apiKey = data.apiKey;
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        })
+        .catch(error => {
+            console.error('Error fetching API key:', error);
+        });</script>
+        
     <script>
 
 function initMap() {
@@ -83,6 +97,46 @@ function handleLocationError(browserHasGeolocation, pos) {
         initMap();
     </script>
     
+
+
+    <script>
+
+
+
+
+        console.log("im api")
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch('http://localhost:3000/student-user')
+                .then(response => {
+                    console.log("im fetch")
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length > 0) {
+                        // Assuming the first entry in data has the latitude and longitude
+                        // const { latitude, longitude } = data[0];
+                        // initMap(latitude, longitude);
+                        console.log(data[0])
+                        console.log(data[0].student_lat,data[0].student_long +"student and driver="+data[0].driver_lat,data[0].driver_long )
+                        // console.log(data.student_lat +"and long is"+data.student_long)
+                        // console.log(data.student_lat +"and long is"+data.student_long)
+        
+                    } else {
+                        console.error('No location data available');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        });
+        
+                
+        
+        
+            </script>
 </body>
 </html>
 
