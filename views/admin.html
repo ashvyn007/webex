@@ -8,6 +8,29 @@
     <link rel="stylesheet" href="/stylesheet/style.css">
     <title>Admin</title>
     <style>
+        .navbar {
+    margin-bottom: 20px;
+    background-color: #1a332f !important;
+    padding: 1rem 2rem !important;
+}
+
+
+.navbar-brand {
+    font-weight: 700 !important;
+    color: #fff !important;
+}
+
+
+.nav-link {
+    font-weight: 500 !important;
+    margin-right: 1rem;
+    color: #fff !important;
+    transition: color 0.3s ease !important;
+}
+
+.nav-link:hover {
+    color: #e2d0b8 !important;
+}
     </style>
 </head>
 <body>
@@ -16,24 +39,16 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">MyWebsite</a>
+            <a class="navbar-brand" href="#">Bus Tracking System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
+                        <a class="nav-link" href="/logout">Log out</a>
+
                 </ul>
             </div>
         </div>
@@ -41,8 +56,8 @@
 
     <div class="main-content">
         <div class="btn-group">
-            <button class="btn btn-custom"><a href="student-form.html">Student Registration</a></button>
-            <button class="btn btn-custom"><a href="driver-form.html">Driver Registration</a></button>
+            <button class="btn btn-custom"><a href="/student-form">Student Registration</a></button>
+            <button class="btn btn-custom"><a href="/driver-form">Driver Registration</a></button>
         </div>
     </div>
 

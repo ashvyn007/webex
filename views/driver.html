@@ -2,24 +2,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Google Maps Example</title>
+    <title>Student Tracking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="/stylesheet/home.css">
     <style>
-        body {
+          body {
             width: 100vw;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
         #map {
             height: 80%;
             width: 80%;
+            margin: auto;
+        }
+        nav .container-fluid{
+            background: #1a3326;
+            margin-right: 1rem;
+
         }
     </style>
 </head>
 <body>
-    <h1>I'm Driver Page</h1>
-    <h2>My Current Location</h2>
+    <nav>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"> Bus tracking system</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Log out</a>
+            </ul>
+        </div>
+    </div>
+</nav>
     <div id="map"></div>
 
     <script>
@@ -30,11 +50,11 @@
         let driverLatPos = 0;
         let driverLongPos = 0;
 
-        // Define custom icons
-        const driverIcon = '/images/bus.png';  // Replace with your driver icon path
-        const studentIcon = '/images/student.png'; // Replace with your student icon path
-        const collegeIcon = '/images/college.png'; // Replace with your college icon path
-        const defaultIcon = '/images/default.png'; // Replace with your default icon path
+       
+        const driverIcon = '/images/bus.png';
+        const studentIcon = '/images/student.png';
+        const collegeIcon = '/images/college.png';
+        const defaultIcon = '/images/default.png'; 
 
         document.addEventListener("DOMContentLoaded", () => {
             fetch('/api/key')
@@ -80,7 +100,7 @@
                             map.setZoom(12);
                         }
 
-                        // Set initial driver marker
+                        
                         updateDriverMarker(driverLatPos, driverLongPos);
                     } else {
                         console.error('No location data available');
@@ -92,18 +112,17 @@
 
             collegeMarker = addMarker(12.8070, 74.9322, "P A College", collegeIcon);
 
-            // Set interval to update driver marker (example logic)
             setInterval(() => {
                 if (driverLatPos < 12.8070 && driverLongPos > 74.9322) {
-                    driverLatPos += 0.0001; // Increase latitude
-                    driverLongPos -= 0.0001; // Decrease longitude
+                    driverLatPos += 0.0001; 
+                    driverLongPos -= 0.0001;
                 } else {
-                    driverLatPos -= 0.0001; // Decrease latitude
-                    driverLongPos += 0.0001; // Increase longitude
+                    driverLatPos -= 0.0001;
+                    driverLongPos += 0.0001; 
                 }
 
                 updateDriverMarker(driverLatPos, driverLongPos);
-            }, 1000); // Update every second (1000 milliseconds)
+            }, 1000); 
         }
 
         function addMarker(lat, lng, title, iconUrl) {
@@ -113,7 +132,7 @@
                 title: title || "",
                 icon: {
                     url: iconUrl,
-                    scaledSize: new google.maps.Size(30, 30)  // Set the size to 30x30 pixels
+                    scaledSize: new google.maps.Size(30, 30)  
                 }
             });
         }
@@ -126,6 +145,10 @@
             }
         }
     </script>
+   
+   <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/js/all.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 </body>
 </html>
 

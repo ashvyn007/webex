@@ -41,22 +41,25 @@ button a:hover {
 }
 
 .btn-custom {
-    background-color: #fcff3a;
+    background-color: #1a332f;
     border: none;
     padding: 15px 30px;
     font-size: 18px;
-    color: #000000;
+    color: #fff !important;
     border-radius: 12px;
     transition: background-color 0.3s, transform 0.3s;
 }
+.btn-custom a{
+    color: #fff;
+}
 
 .btn-custom:hover {
-    background-color: #fc1e1e;
+    background-color: #e2d0b8;
     transform: translateY(-2px);
 }
 
 .btn-custom:active {
-    background-color: #004494;
+    background-color: #e9e0d3;
 }
 
 footer {

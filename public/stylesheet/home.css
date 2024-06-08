@@ -1,0 +1,110 @@
+:root {
+    --primary-color: #1a332f;
+    --secondary-color: #6c8879;
+    --tertiary-color: #e2d0b8;
+    --light-color: #e9e0d3;
+    --background-color: #ffff;
+    --font-color: #ffffff;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body canvas {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-color);
+    position: absolute;
+}
+
+.navbar {
+    margin-bottom: 20px;
+    background-color: var(--primary-color) !important;
+    padding: 1rem 2rem !important;
+}
+
+
+.navbar-brand {
+    font-weight: 700 !important;
+    color: var(--font-color) !important;
+}
+
+
+.nav-link {
+    font-weight: 500 !important;
+    margin-right: 1rem;
+    color: var(--font-color) !important;
+    transition: color 0.3s ease !important;
+}
+
+.nav-link:hover {
+    color: var(--tertiary-color) !important;
+}
+
+/* home section  */
+
+.home-section {
+    padding: 2rem;
+    min-height: calc(95vh - 150px) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main-content {
+    background: #e9e0d3c8;
+    font-size: 0.9rem;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.259);
+    max-width: 900px;
+    width: 100%;
+    z-index: 999;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+/* footer section  */
+
+footer {
+    background-color: #00000080;
+    color: var(--font-color);
+    padding: 20px 0;
+    text-align: center;
+    z-index: 999;
+    position: absolute;
+    bottom: 0 !important;
+    width: 100%;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer .social-icons a {
+    color: var(--font-color);
+    margin: 0 10px;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+footer .social-icons a:hover {
+    color: var(--tertiary-color);
+}
+
+footer .footer-links a {
+    color: var(--font-color);
+    margin: 0 10px;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+footer .footer-links a:hover {
+    color: var(--tertiary-color);
+}

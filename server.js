@@ -46,12 +46,18 @@ app.get('/student',(req,res)=>{
 app.get('/student-login',(req,res)=>{
     res.sendFile('views/student-login.html',{root:__dirname});
 })
+app.get('/student-form',(req,res)=>{
+  res.sendFile('views/student-form.html',{root:__dirname});
+})
+app.get('/driver-form',(req,res)=>{
+  res.sendFile('views/driver-form.html',{root:__dirname});
+})
 
 app.post('/admin-login', (req, res) => {
   const a_email = 'admin2webex.com'
   const a_password = 'admin@1234';
   if (a_email && a_password) {
-          if (a_password == 'admin@1234') {
+          if (a_password == 'admin@1234') {               
             req.session.loggedin = true;
             req.session.user = a_email;
             console.log(req.session.user +" im session name")
@@ -127,6 +133,74 @@ app.get('/driver-login',(req,res)=>{
 
 
 
+app.post("/student-form", (req, res) => {
+  const usn = req.body.usn;
+  const name = req.body.student_name;
+  const email = req.body.student_email;
+  const pass = req.body.student_pass;
+  const c_pass=req.body.student_cpass;
+  const lat = req.body.student_lat;
+  const long = req.body.student_long;
+  const place = req.body.student_place;
+  const bus_id=req.body.bus_id;
+
+  if (pass === c_pass) {
+          var sql1 ="INSERT INTO `student` (`usn`, `student_name`, `student_email`, `student_pass`, `student_lat`, `student_long`, `student_place`, `bus_id`) VALUES (?,?,?,?,?,?,?,?);"
+              connection.query(sql1,
+                  [usn, name, email, c_pass, lat,long,place,bus_id],
+                  (err, result) => {
+                      if (err) {
+                          console.error('Error inserting user:', err.message);
+                          res.status(500).send('Error inserting user');
+                      } else {
+                          console.log("Value inserted successfully");
+                          res.redirect('/admin');
+                      }
+                  }
+              );
+  } else {
+      res.status(400).send('Passwords do not match');
+  }
+});
+
+
+app.post("/driver-form", (req, res) => {
+  const id = req.body.bus_id;
+  const name = req.body.driver_name;
+  const email = req.body.driver_email;
+  const pass = req.body.driver_pass;
+  const c_pass=req.body.driver_cpass;
+  const lat = req.body.driver_lat;
+  const long = req.body.driver_long;
+
+  if (pass === c_pass) {
+          var sql2 ="INSERT INTO `driver` (`bus_id`, `driver_name`, `driver_email`, `driver_pass`, `driver_lat`,`driver_long`)VALUES (?,?,?,?,?,?);"
+              connection.query(sql2,
+                  [id, name, email, c_pass, lat,long],
+                  (err, result) => {
+                      if (err) {
+                          console.error('Error inserting user:', err.message);
+                          res.status(500).send('Error inserting user');
+                      } else {
+                          console.log("Value inserted successfully");
+                          res.redirect('/admin');
+                      }
+                  }
+              );
+  } else {
+      res.status(400).send('Passwords do not match');
+  }
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect('/');
+    }
+  });
+});
 
 app.get('/student-user', (req, res) => {
   if (!req.session.loggedin) {
