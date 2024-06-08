@@ -1,114 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Student page</h1>
 
-    <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html>
 <head>
     <title>Google Maps Example</title>
     <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+        }
         #map {
-            height: 400px;
-            width: 100%;
+            height: 80%;
+            width: 80%;
+            margin: auto;
         }
     </style>
 </head>
 <body>
-    <h1>My Current Location</h1>
+    <h1>Student Page</h1>
+    <h2>My Current Location</h2>
     <div id="map"></div>
 
-    <script>fetch('/api/key')
-        .then(response => response.json())
-        .then(data => {
-            const apiKey = data.apiKey;
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
-            script.async = true;
-            script.defer = true;
-            document.head.appendChild(script);
-        })
-        .catch(error => {
-            console.error('Error fetching API key:', error);
-        });</script>
-        
     <script>
+        let map;
+        let driverMarker;
+        let studentMarker;
+        let collegeMarker;
+        const driverIcon = '/images/bus.png';  // Replace with your driver icon path
+        const studentIcon = '/images/student.png'; // Replace with your student icon path
+        const collegeIcon = '/images/college.png'; // Replace with your college icon path
+        const defaultIcon = '/images/default.png'; // Replace with your default icon path
 
-function initMap() {
-    // Create a new map centered at the current location
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 0, lng: 0 },
-        zoom: 15
-    });
-
-    // Try HTML5 geolocation to get the current position
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-
-            // Add a marker at the current location
-            new google.maps.Marker({
-                position: pos,
-                map: map,
-                title: 'You are here!'
-            });
-
-            // Center the map on the current location
-            map.setCenter(pos);
-        }, function () {
-            handleLocationError(true, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, map.getCenter());
-    }
-}
-
-function handleLocationError(browserHasGeolocation, pos) {
-    var infoWindow = new google.maps.InfoWindow({
-        content: browserHasGeolocation ?
-            'Error: The Geolocation service failed.' :
-            'Error: Your browser doesn\'t support geolocation.'
-    });
-
-    var marker = new google.maps.Marker({
-        position: pos,
-        map: map,
-        title: 'Error!'
-    });
-
-    marker.addListener('click', function () {
-        infoWindow.open(map, marker);
-    });
-}
-
-
-        // JavaScript code to initialize Google Map
-    </script>
-    <script>
-        initMap();
-    </script>
-    
-
-
-    <script>
-
-
-
-
-        console.log("im api")
         document.addEventListener("DOMContentLoaded", () => {
-            fetch('http://localhost:3000/student-user')
+            fetch('/api/key')
+                .then(response => response.json())
+                .then(data => {
+                    const apiKey = data.apiKey;
+                    const script = document.createElement('script');
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+                    script.async = true;
+                    script.defer = true;
+                    document.head.appendChild(script);
+                })
+                .catch(error => {
+                    console.error('Error fetching API key:', error);
+                });
+
+            fetch('http://localhost:4000/student-user')
                 .then(response => {
-                    console.log("im fetch")
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
@@ -116,14 +55,12 @@ function handleLocationError(browserHasGeolocation, pos) {
                 })
                 .then(data => {
                     if (data.length > 0) {
-                        // Assuming the first entry in data has the latitude and longitude
-                        // const { latitude, longitude } = data[0];
-                        // initMap(latitude, longitude);
-                        console.log(data[0])
-                        console.log(data[0].student_lat,data[0].student_long +"student and driver="+data[0].driver_lat,data[0].driver_long )
-                        // console.log(data.student_lat +"and long is"+data.student_long)
-                        // console.log(data.student_lat +"and long is"+data.student_long)
-        
+                        var student_lat_pos = data[0].student_lat;
+                        var student_long_pos = data[0].student_long;
+                        var driver_lat_pos = data[0].driver_lat;
+                        var driver_long_pos = data[0].driver_long;
+
+                        initMap(student_lat_pos, student_long_pos, driver_lat_pos, driver_long_pos);
                     } else {
                         console.error('No location data available');
                     }
@@ -132,13 +69,50 @@ function handleLocationError(browserHasGeolocation, pos) {
                     console.error('Fetch error:', error);
                 });
         });
-        
-                
-        
-        
-            </script>
-</body>
-</html>
 
+        function initMap(student_lat_pos, student_long_pos, driver_lat_pos, driver_long_pos) {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: student_lat_pos, lng: student_long_pos },
+                zoom: 12
+            });
+
+            studentMarker = addMarker(student_lat_pos, student_long_pos, "You are here", studentIcon);
+            collegeMarker = addMarker(12.8070, 74.9322, "P A College", collegeIcon);
+
+            setInterval(() => {if (driver_lat_pos < 12.8070 && driver_long_pos > 74.9322) {
+                    // If driver is below the specified latitude and to the right of the specified longitude
+                    driver_lat_pos += 0.0001; // Increase latitude
+                    driver_long_pos -= 0.0001; // Decrease longitude
+                } else {
+                    // Otherwise (if driver is above the specified latitude or to the left of the specified longitude)
+                    driver_lat_pos -= 0.0001; // Decrease latitude
+                    driver_long_pos += 0.0001; // Increase longitude
+                }
+                updateDriverMarker(driver_lat_pos, driver_long_pos);
+            }, 900); // Update every second (1000 milliseconds)
+        }
+
+        
+        function addMarker(lat, lng, title,iconUrl) {
+            return new google.maps.Marker({
+                position: { lat, lng },
+                map: map,
+                title: title || "",
+                icon: {
+                    url: iconUrl,
+                    scaledSize: new google.maps.Size(30, 30)  // Set the size to 30x30 pixels
+                }
+            });
+        }
+
+        function updateDriverMarker(lat, lng) {
+            if (driverMarker) {
+                driverMarker.setPosition({ lat, lng });
+            } else {
+                driverMarker = addMarker(lat, lng, "Driver's Location", driverIcon);
+            }
+        }
+    </script>
 </body>
-</html>
+</html> 
+

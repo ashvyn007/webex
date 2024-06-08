@@ -10,7 +10,7 @@ const API_KEY=(process.env.API_KEY); // Access your API key
 
 
 const app = express()
-const port = 3000
+const port = 4000
 
 app.get('/api/key', (req, res) => {
   res.json({ apiKey: process.env.API_KEY });
@@ -47,6 +47,24 @@ app.get('/student-login',(req,res)=>{
     res.sendFile('views/student-login.html',{root:__dirname});
 })
 
+app.post('/admin-login', (req, res) => {
+  const a_email = 'admin2webex.com'
+  const a_password = 'admin@1234';
+  if (a_email && a_password) {
+          if (a_password == 'admin@1234') {
+            req.session.loggedin = true;
+            req.session.user = a_email;
+            console.log(req.session.user +" im session name")
+            console.log(req.session.user_usn+" in login page")
+            res.redirect('/admin');
+          } else {
+            res.send('password doesnt match');
+          } 
+      } else {
+        res.send('Incorrect Username and/or Password!');
+      }
+    });
+  
 
 app.post('/student-login', (req, res) => {
   const s_email = req.body.s_email;
@@ -58,9 +76,9 @@ app.post('/student-login', (req, res) => {
           if (s_password == results[0].student_pass) {
             req.session.loggedin = true;
             req.session.user = s_email;
-            req.session.user_id=results[0].usn
+            req.session.user_usn=results[0].usn
             console.log(req.session.user +" im session name")
-            console.log(req.session.user_id+" in login page")
+            console.log(req.session.user_usn+" in login page")
             res.redirect('/student');
           } else {
             res.send('password doesnt match');
@@ -75,25 +93,39 @@ app.post('/student-login', (req, res) => {
 });
 
 
+app.post('/driver-login', (req, res) => {
+  const d_email = req.body.d_email;
+  const d_password = req.body.d_pass;
+  if (d_email && d_password) {
+    connection.query('SELECT * FROM driver WHERE driver_email = ?', [d_email], (error, results, fields) => {
+      if (results.length > 0) {
+          console.log(results[0])
+          if (d_password == results[0].driver_pass) {
+            req.session.loggedin = true;
+            req.session.user = d_email;
+            req.session.user_id=results[0].bus_id
+            console.log(req.session.user +" im session name")
+            console.log(req.session.user_id+" in login page")
+            res.redirect('/driver');
+          } else {
+            res.send('password doesnt match');
+          } 
+      } else {
+        res.send('Incorrect Username and/or Password!');
+      }
+    });
+  } else {
+    res.send('Please enter Username and Password!');
+  }
+});
+
 
 
 app.get('/driver-login',(req,res)=>{
     res.sendFile('views/driver-login.html',{root:__dirname});
 })
 
-app.get('/students',(req,res)=>{
-    const query = 'SELECT * FROM student JOIN driver ON student.bus_id = driver.bus_id;';
-    connection.query(query, (err, results) => {
-        console.log(results)
-        
-        if (err) {
-            console.log(err);
-            res.status(500).send('Internal Server Error');
-          } else {
-            res.json(results)
-        }
-});
-});
+
 
 
 app.get('/student-user', (req, res) => {
@@ -106,34 +138,29 @@ app.get('/student-user', (req, res) => {
       console.error(err);
       res.status(500).send('Internal Server Error');
     } else {
+      // console.log(results)
       res.json(results);
     }
   });
 });
 
 
-// app.get('/students', (req, res) => {
-//     // if (!req.session.usn) {
-//     //     return res.status(401).send('You are not logged in');
-//     // }
-// console.log("im students")
-//     const usn = req.session.usn;
+app.get('/driver-user', (req, res) => {
+  if (!req.session.loggedin) {
+    return res.status(401).send('Please login to view this page!');
+  }
+  const query = 'SELECT * FROM student JOIN driver ON student.bus_id = driver.bus_id WHERE student.bus_id = ?';
+  connection.query(query, [req.session.user_id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.json(results);
+    }
+  });
+});
 
-//     const query = 'SELECT * FROM student ';
-//     connection.query(query, (err, results) => {
-//         console.log(results)
-//         if (err) {
-//             console.error('Error executing query:', err.stack);
-//             return res.status(500).send('Error retrieving data');
-//         }
 
-//         if (results.length > 0) {
-//             res.json(results[0]);
-//         } else {
-//             res.status(404).send('Student not found');
-//         }
-//     });
-// });
 
 app.get('/driver',(req,res)=>{
     res.sendFile('views/driver.html',{root:__dirname})
